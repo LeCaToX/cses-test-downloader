@@ -67,15 +67,13 @@ function downloadTests(taskName, testFormat) {
       inputPath = `${taskName}.${i + 1}.in`;
       outputPath = `${taskName}.${i + 1}.out`;
     } else if (testFormat === "CF") {
-      inputPath = `${taskName}.${i + 1}.txt`;
+      inputPath = `${taskName}.${i + 1}.in`;
     } else {
       throw "test format not allowed";
     }
 
     zip.file(inputPath, urlToPromise(test.inputRef));
-    if (testFormat !== "CF") {
-      zip.file(outputPath, urlToPromise(test.outputRef));
-    }
+    zip.file(outputPath, urlToPromise(test.outputRef));
   });
 
   console.log("test created");

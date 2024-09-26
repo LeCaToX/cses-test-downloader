@@ -11,15 +11,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 function getTestLinks() {
-  let allAnchors = document.querySelectorAll('a[class="view"]');
+  let testSections = document.querySelectorAll('h4[id^="test"]');  // Select each test section by its ID (e.g., test1, test2)
   let tests = [];
 
-  for (let i = 0; i < allAnchors.length; i += 3) {
+  testSections.forEach((testSection, i) => {
+    // Each section starts with a test ID, followed by tables for input, correct output, and user output
+    let inputLink = testSection.nextElementSibling.querySelector('a.view').href;
+    let outputLink = testSection.nextElementSibling.nextElementSibling.querySelector('a.view').href;
+
     tests.push({
-      inputRef: allAnchors[i].href,
-      outputRef: allAnchors[i + 1].href,
+      inputRef: inputLink,
+      outputRef: outputLink,
     });
-  }
+  });
 
   return tests;
 }
@@ -62,12 +66,16 @@ function downloadTests(taskName, testFormat) {
     } else if (testFormat === "DMOJ") {
       inputPath = `${taskName}.${i + 1}.in`;
       outputPath = `${taskName}.${i + 1}.out`;
+    } else if (testFormat === "CF") {
+      inputPath = `${taskName}.${i + 1}.in`;
     } else {
       throw "test format not allowed";
     }
 
     zip.file(inputPath, urlToPromise(test.inputRef));
-    zip.file(outputPath, urlToPromise(test.outputRef));
+    if (testFormat !== "CF") {
+      zip.file(outputPath, urlToPromise(test.outputRef));
+    }
   });
 
   console.log("test created");

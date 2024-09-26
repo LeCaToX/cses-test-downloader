@@ -67,7 +67,7 @@ function downloadTests(taskName, testFormat) {
       inputPath = `${taskName}.${i + 1}.in`;
       outputPath = `${taskName}.${i + 1}.out`;
     } else if (testFormat === "CF") {
-      inputPath = `${taskName}.${i + 1}.in`;
+      inputPath = `${taskName}.${i + 1}.txt`;
     } else {
       throw "test format not allowed";
     }
